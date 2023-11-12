@@ -1,118 +1,206 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { FactoryProps } from "@/types";
+import Image from "next/image";
+import Link from "next/link";
+import { FaSearch } from "react-icons/fa";
+import { FaPen, FaTrash, FaXmark } from "react-icons/fa6";
+import useSWRInfinite from "swr/infinite";
+import Swal from "sweetalert2";
 
 export default function Home() {
+  const [search, setSearch] = useState("");
+  const [text, setText] = useState("");
+
+  const LIMIT = 10;
+  const fetcher = (key: string) => fetch(key).then((res) => res.json());
+  const { data, error, isLoading, isValidating, size, setSize, mutate } =
+    useSWRInfinite(
+      (index) => `/api/factory?search=${search}&limit=${LIMIT}&page=${index}`,
+      fetcher,
+      {
+        refreshInterval: 3000,
+      }
+    );
+
+  const factories: FactoryProps[] = data ? [].concat(...data) : [];
+  const isLoadingMore =
+    isLoading || (size > 0 && data && typeof data[size - 1] === "undefined");
+  const isEmpty = data?.[0]?.length === 0;
+  const isReachingEnd =
+    isEmpty || (data && data[data.length - 1]?.length < LIMIT);
+  // const isRefreshing = isValidating && data && data.length === size;
+
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "هل انت متاكد؟",
+      text: "هل تريد حذف هذا المشروع؟",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "نعم",
+      cancelButtonText: "الغاء",
+    });
+    if (result.isConfirmed) {
+      const res = await fetch(`/api/factory/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        Swal.fire("تم الحذف!", undefined, "success");
+        console.log(data);
+        mutate();
+      } else {
+        Swal.fire("حدث خطأ اثناء الحذف!", undefined, "error");
+        console.log("error");
+      }
+    }
+  };
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+    <section className="py-10 px-10">
+      <div className="bg-sec rounded-full w-[400px] max-lg:w-[350px] max-sm:w-[200px] guide-shadow m-auto max-lg:px-4 max-lg:py-3 px-6 py-4 max-sm:px-2 max-sm:py-1.5 flex justify-between mb-10">
+        <input
+          type="text"
+          placeholder="ابحث"
+          value={text}
+          onChange={(e) => {
+            if (e.target.value) {
+              setText(e.target.value);
+            } else {
+              setText(e.target.value);
+              setSearch("");
+            }
+          }}
+          className="bg-transparent outline-none placeholder:font-bold max-lg:text-sm max-sm:text-[8px]/3 w-[300px] max-lg:w-[270px] max-sm:w-[160px] border-b text-white border-white/60"
         />
+        <FaXmark
+          onClick={() => {
+            setSearch("");
+            setText("");
+          }}
+          className="relative w-5 h-5 max-lg:w-3 max-lg:h-3 max-sm:w-2 max-sm:h-2 left-4 top-1 text-white cursor-pointer"
+        />
+        <button
+          onClick={() => {
+            setSearch(text);
+          }}
+        >
+          <FaSearch
+            color="white"
+            className="w-9 h-9 max-lg:w-7 max-lg:h-7 max-sm:w-4 max-sm:h-4"
+          />
+        </button>
       </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div>
+        <Link href="/add/factory">
+          <button className="w-fit my-10 bg-sec text-white py-2 px-6 rounded-sm">
+            اضافة مشروع
+          </button>
+        </Link>
       </div>
-    </main>
-  )
+      {isLoading ? (
+        <div className="text-center text-4xl">جاري تحميل البيانات...</div>
+      ) : error ? (
+        <div className="text-center text-4xl">
+          حدث خطأ يرجى المحاولة مرة اخرى
+        </div>
+      ) : isEmpty ? (
+        <div className="text-center text-4xl">لا يوجد بيانات لعرضها</div>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-right min-w-[200px]">
+                اسم المشروع
+              </TableHead>
+              <TableHead className="text-right min-w-[200px]">
+                نوع المشروع
+              </TableHead>
+              <TableHead className="text-right min-w-[200px]">النشاط</TableHead>
+              <TableHead className="text-right min-w-[200px]">
+                التليفون
+              </TableHead>
+              <TableHead className="text-right min-w-[200px]">
+                الايميل
+              </TableHead>
+              <TableHead className="text-right min-w-[200px]">الصور</TableHead>
+              <TableHead className="text-right min-w-[200px]">
+                اجراءات
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {factories.map((factory: FactoryProps) => (
+              <TableRow key={factory._id}>
+                <TableCell className="text-right min-w-[200px]">
+                  {factory.nameAR}
+                </TableCell>
+                <TableCell className="text-right min-w-[200px]">
+                  {factory.typeAR}
+                </TableCell>
+                <TableCell className="text-right min-w-[200px]">
+                  {factory.descriptionAR}
+                </TableCell>
+                <TableCell className="text-right min-w-[200px]">
+                  {factory.phone}
+                </TableCell>
+                <TableCell className="text-right min-w-[200px]">
+                  {factory.email}
+                </TableCell>
+                <TableCell className="text-right min-w-[200px]">
+                  <div>
+                    {factory.images.map((img) => (
+                      <Image
+                        src={img}
+                        width={80}
+                        height={80}
+                        key={img}
+                        alt="img"
+                        className="w-20"
+                      />
+                    ))}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right min-w-[200px]">
+                  <button
+                    onClick={() => handleDelete(factory._id)}
+                    className="m-4 rounded-full p-4 bg-main text-white"
+                  >
+                    <FaTrash />
+                  </button>
+                  <Link href={`/edit/factory/${factory._id}`}>
+                    <button className="m-4 rounded-full p-4 bg-main text-white">
+                      <FaPen />
+                    </button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+      <button
+        onClick={() => setSize(size + 1)}
+        disabled={isLoadingMore || isReachingEnd}
+        className={`${
+          (isLoadingMore || isReachingEnd) && "opacity-60"
+        } w-[215px] max-sm:w-[70px] more-shadow bg-[#292E3D] my-10 m-auto block text-xl max-sm:text-xs font-bold text-white py-3 max-sm:py-1`}
+      >
+        {isLoadingMore
+          ? "جاري التحميل..."
+          : isReachingEnd
+          ? "لا يوجد بيانات اخرى"
+          : "المزيد"}
+      </button>
+    </section>
+  );
 }
