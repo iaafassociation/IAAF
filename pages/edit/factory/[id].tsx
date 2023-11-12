@@ -82,7 +82,7 @@ export default function EditFactory() {
 
         const allImages = !deleted
           ? [].concat(...data.images, ...arr)
-          : [].concat(...oldImages, ...arr);
+          : [].concat(...(oldImages as any), ...arr);
 
         const res = await fetch("/api/factory", {
           method: "POST",

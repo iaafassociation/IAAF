@@ -39,7 +39,7 @@ export default function AddFactory() {
   const { mutate } = useSWRConfig();
 
   const [urls, setUrls] = useState<(string | ArrayBuffer)[]>([]);
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<(File | null)[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [key, setKey] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -65,7 +65,7 @@ export default function AddFactory() {
       let arr = [];
 
       for (let i = 0; i < images.length; i++) {
-        const data = await uploadCloudinary(images[i]);
+        const data = await uploadCloudinary(images[i] as File);
         arr.push(data);
       }
 
@@ -98,12 +98,13 @@ export default function AddFactory() {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
+      const selected = e.target.files ? e.target.files[0] : null;
       setError(null);
 
-      setImages((prevValue) => [...prevValue, e.target.files[0]]);
+      setImages((prevValue) => [...prevValue, selected]);
       setUrls((prevValue) => [
         ...prevValue,
-        URL.createObjectURL(e.target.files[0]),
+        URL.createObjectURL(selected as Blob),
       ]);
     }
   };
