@@ -54,6 +54,15 @@ export default async function handler(
       } catch (error) {
         res.status(500).json({ message: "Server error occurred" });
       }
+    } else if (req.query.type) {
+      try {
+        const members = await Event.find({ type: req.query.type });
+        // console.log(members);
+
+        res.status(200).json(members);
+      } catch (error) {
+        res.status(500).json({ message: "Server error occurred" });
+      }
     } else {
       try {
         const events = await Event.find();
