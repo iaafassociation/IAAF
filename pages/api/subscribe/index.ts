@@ -10,6 +10,7 @@ const cors = Cors({
     "http://localhost:5173",
     "http://iaafalex.com",
     "https://iaafalex.com",
+    "https://iaafalex.netlify.app/",
   ],
   methods: ["POST"],
 });
