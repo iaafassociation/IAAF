@@ -117,11 +117,12 @@ export default async function handler(
       transporter.sendMail(data, (err: any) => {
         if (err) {
           console.log(err);
+          res.status(500).json({ message: "Something went wrong" });
         } else {
           console.log("Message sent");
+          res.status(200).json({ message: "Message Sent" });
         }
       });
-      res.status(200).json({ message: "Message Sent" });
     } catch (error) {
       res.status(500).json({ message: "Server error occurred" });
     }
