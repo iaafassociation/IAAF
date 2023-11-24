@@ -48,16 +48,7 @@ export default async function handler(
             { descriptionEN: { $regex: req.query.search, $options: "i" } },
             { date: { $regex: req.query.search, $options: "i" } },
           ],
-        });
-        // console.log(members);
-
-        res.status(200).json(members);
-      } catch (error) {
-        res.status(500).json({ message: "Server error occurred" });
-      }
-    } else if (req.query.type) {
-      try {
-        const members = await Event.find({ type: req.query.type });
+        }).sort({ date: -1 });
         // console.log(members);
 
         res.status(200).json(members);
@@ -66,7 +57,7 @@ export default async function handler(
       }
     } else {
       try {
-        const events = await Event.find();
+        const events = await Event.find().sort({ date: -1 });
         res.status(200).json(events);
       } catch (error) {
         res.status(500).json({ message: "Server error occurred" });

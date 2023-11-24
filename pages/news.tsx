@@ -29,8 +29,6 @@ export default function News() {
     refreshInterval: 3000,
   });
 
-  console.log(data);
-
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: "هل انت متاكد؟",
@@ -96,7 +94,7 @@ export default function News() {
       <div>
         <Link href="/add/event">
           <button className="w-fit my-10 bg-sec text-white py-2 px-6 rounded-sm">
-            اضافة حدث
+            اضافة خبر
           </button>
         </Link>
       </div>
@@ -110,153 +108,74 @@ export default function News() {
         ) : searchData.length > 0 ? (
           <>
             <div className="text-center text-4xl mb-10 text-sec font-black">
-              اخر الاحداث
+              اخبار الجمعية
             </div>
-            {data.filter((event: EventProps) => event.type === "new").length >
-            0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-right min-w-[200px]">
-                      عنوان الحدث
-                    </TableHead>
-                    <TableHead className="text-right min-w-[200px]">
-                      وصف الحدث
-                    </TableHead>
-                    <TableHead className="text-right min-w-[200px]">
-                      تاريخ الحدث
-                    </TableHead>
-                    <TableHead className="text-right min-w-[200px]">
-                      صورة الحدث
-                    </TableHead>
-                    <TableHead className="text-right min-w-[200px]">
-                      اجراءات
-                    </TableHead>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-right min-w-[200px]">
+                    عنوان الحدث
+                  </TableHead>
+                  <TableHead className="text-right min-w-[200px]">
+                    وصف الحدث
+                  </TableHead>
+                  <TableHead className="text-right min-w-[200px]">
+                    تاريخ الحدث
+                  </TableHead>
+                  <TableHead className="text-right min-w-[200px]">
+                    صورة الحدث
+                  </TableHead>
+                  <TableHead className="text-right min-w-[200px]">
+                    اجراءات
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {searchData.map((event: EventProps) => (
+                  <TableRow key={event._id}>
+                    <TableCell className="text-right min-w-[200px]">
+                      {event.titleAR}
+                    </TableCell>
+                    <TableCell className="text-right min-w-[400px]">
+                      {event.descriptionAR}
+                    </TableCell>
+                    <TableCell className="text-right min-w-[200px]">
+                      {new Date(event.date).getDate()}/
+                      {new Date(event.date).getMonth() + 1}/
+                      {new Date(event.date).getFullYear()}
+                    </TableCell>
+                    <TableCell className="text-right min-w-[200px]">
+                      {event.image ? (
+                        <div>
+                          <Image
+                            src={event.image}
+                            width={80}
+                            height={80}
+                            alt="img"
+                            className="w-20"
+                          />
+                        </div>
+                      ) : (
+                        "لا يوجد صورة"
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right min-w-[200px]">
+                      <button
+                        onClick={() => handleDelete(event._id)}
+                        className="m-4 rounded-full p-4 bg-main text-white"
+                      >
+                        <FaTrash />
+                      </button>
+                      <Link href={`/edit/event/${event._id}`}>
+                        <button className="m-4 rounded-full p-4 bg-main text-white">
+                          <FaPen />
+                        </button>
+                      </Link>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {searchData
-                    .filter((event: EventProps) => event.type === "new")
-                    .map((event: EventProps) => (
-                      <TableRow key={event._id}>
-                        <TableCell className="text-right min-w-[200px]">
-                          {event.titleAR}
-                        </TableCell>
-                        <TableCell className="text-right min-w-[400px]">
-                          {event.descriptionAR}
-                        </TableCell>
-                        <TableCell className="text-right min-w-[200px]">
-                          {event.date}
-                        </TableCell>
-                        <TableCell className="text-right min-w-[200px]">
-                          {event.image ? (
-                            <div>
-                              <Image
-                                src={event.image}
-                                width={80}
-                                height={80}
-                                alt="img"
-                                className="w-20"
-                              />
-                            </div>
-                          ) : (
-                            "لا يوجد صورة"
-                          )}
-                        </TableCell>
-                        <TableCell className="text-right min-w-[200px]">
-                          <button
-                            onClick={() => handleDelete(event._id)}
-                            className="m-4 rounded-full p-4 bg-main text-white"
-                          >
-                            <FaTrash />
-                          </button>
-                          <Link href={`/edit/event/${event._id}`}>
-                            <button className="m-4 rounded-full p-4 bg-main text-white">
-                              <FaPen />
-                            </button>
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            ) : (
-              <div className="text-center text-4xl">لا يوجد بيانات لعرضها</div>
-            )}
-            <div className="text-center text-4xl my-10 text-sec font-black">
-              الاحداث السابقة للجمعية
-            </div>
-            {data.filter((event: EventProps) => event.type === "old").length >
-            0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-right min-w-[200px]">
-                      عنوان الحدث
-                    </TableHead>
-                    <TableHead className="text-right min-w-[200px]">
-                      وصف الحدث
-                    </TableHead>
-                    <TableHead className="text-right min-w-[200px]">
-                      تاريخ الحدث
-                    </TableHead>
-                    <TableHead className="text-right min-w-[200px]">
-                      صورة الحدث
-                    </TableHead>
-                    <TableHead className="text-right min-w-[200px]">
-                      اجراءات
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {searchData
-                    .filter((event: EventProps) => event.type === "old")
-                    .map((event: EventProps) => (
-                      <TableRow key={event._id}>
-                        <TableCell className="text-right min-w-[200px]">
-                          {event.titleAR}
-                        </TableCell>
-                        <TableCell className="text-right min-w-[400px]">
-                          {event.descriptionAR}
-                        </TableCell>
-                        <TableCell className="text-right min-w-[200px]">
-                          {event.date}
-                        </TableCell>
-                        <TableCell className="text-right min-w-[200px]">
-                          {event.image ? (
-                            <div>
-                              <Image
-                                src={event.image}
-                                width={80}
-                                height={80}
-                                alt="img"
-                                className="w-20"
-                              />
-                            </div>
-                          ) : (
-                            "لا يوجد صورة"
-                          )}
-                        </TableCell>
-                        <TableCell className="text-right min-w-[200px]">
-                          <button
-                            onClick={() => handleDelete(event._id)}
-                            className="m-4 rounded-full p-4 bg-main text-white"
-                          >
-                            <FaTrash />
-                          </button>
-                          <Link href={`/edit/event/${event._id}`}>
-                            <button className="m-4 rounded-full p-4 bg-main text-white">
-                              <FaPen />
-                            </button>
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            ) : (
-              <div className="text-center text-4xl">لا يوجد بيانات لعرضها</div>
-            )}
+                ))}
+              </TableBody>
+            </Table>
           </>
         ) : (
           <div className="text-center text-4xl">لا يوجد بيانات لعرضها</div>
@@ -270,153 +189,74 @@ export default function News() {
       ) : data.length > 0 ? (
         <>
           <div className="text-center text-4xl mb-10 text-sec font-black">
-            اخر الاحداث
+            اخبار الجمعية
           </div>
-          {data.filter((event: EventProps) => event.type === "new").length >
-          0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-right min-w-[200px]">
-                    عنوان الحدث
-                  </TableHead>
-                  <TableHead className="text-right min-w-[200px]">
-                    وصف الحدث
-                  </TableHead>
-                  <TableHead className="text-right min-w-[200px]">
-                    تاريخ الحدث
-                  </TableHead>
-                  <TableHead className="text-right min-w-[200px]">
-                    صورة الحدث
-                  </TableHead>
-                  <TableHead className="text-right min-w-[200px]">
-                    اجراءات
-                  </TableHead>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-right min-w-[200px]">
+                  عنوان الحدث
+                </TableHead>
+                <TableHead className="text-right min-w-[200px]">
+                  وصف الحدث
+                </TableHead>
+                <TableHead className="text-right min-w-[200px]">
+                  تاريخ الحدث
+                </TableHead>
+                <TableHead className="text-right min-w-[200px]">
+                  صورة الحدث
+                </TableHead>
+                <TableHead className="text-right min-w-[200px]">
+                  اجراءات
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data.map((event: EventProps) => (
+                <TableRow key={event._id}>
+                  <TableCell className="text-right min-w-[200px]">
+                    {event.titleAR}
+                  </TableCell>
+                  <TableCell className="text-right min-w-[400px]">
+                    {event.descriptionAR}
+                  </TableCell>
+                  <TableCell className="text-right min-w-[200px]">
+                    {new Date(event.date).getDate()}/
+                    {new Date(event.date).getMonth() + 1}/
+                    {new Date(event.date).getFullYear()}
+                  </TableCell>
+                  <TableCell className="text-right min-w-[200px]">
+                    {event.image ? (
+                      <div>
+                        <Image
+                          src={event.image}
+                          width={80}
+                          height={80}
+                          alt="img"
+                          className="w-20"
+                        />
+                      </div>
+                    ) : (
+                      "لا يوجد صورة"
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right min-w-[200px]">
+                    <button
+                      onClick={() => handleDelete(event._id)}
+                      className="m-4 rounded-full p-4 bg-main text-white"
+                    >
+                      <FaTrash />
+                    </button>
+                    <Link href={`/edit/event/${event._id}`}>
+                      <button className="m-4 rounded-full p-4 bg-main text-white">
+                        <FaPen />
+                      </button>
+                    </Link>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data
-                  .filter((event: EventProps) => event.type === "new")
-                  .map((event: EventProps) => (
-                    <TableRow key={event._id}>
-                      <TableCell className="text-right min-w-[200px]">
-                        {event.titleAR}
-                      </TableCell>
-                      <TableCell className="text-right min-w-[400px]">
-                        {event.descriptionAR}
-                      </TableCell>
-                      <TableCell className="text-right min-w-[200px]">
-                        {event.date}
-                      </TableCell>
-                      <TableCell className="text-right min-w-[200px]">
-                        {event.image ? (
-                          <div>
-                            <Image
-                              src={event.image}
-                              width={80}
-                              height={80}
-                              alt="img"
-                              className="w-20"
-                            />
-                          </div>
-                        ) : (
-                          "لا يوجد صورة"
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right min-w-[200px]">
-                        <button
-                          onClick={() => handleDelete(event._id)}
-                          className="m-4 rounded-full p-4 bg-main text-white"
-                        >
-                          <FaTrash />
-                        </button>
-                        <Link href={`/edit/event/${event._id}`}>
-                          <button className="m-4 rounded-full p-4 bg-main text-white">
-                            <FaPen />
-                          </button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="text-center text-4xl">لا يوجد بيانات لعرضها</div>
-          )}
-          <div className="text-center text-4xl my-10 text-sec font-black">
-            الاحداث السابقة للجمعية
-          </div>
-          {data.filter((event: EventProps) => event.type === "old").length >
-          0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-right min-w-[200px]">
-                    عنوان الحدث
-                  </TableHead>
-                  <TableHead className="text-right min-w-[200px]">
-                    وصف الحدث
-                  </TableHead>
-                  <TableHead className="text-right min-w-[200px]">
-                    تاريخ الحدث
-                  </TableHead>
-                  <TableHead className="text-right min-w-[200px]">
-                    صورة الحدث
-                  </TableHead>
-                  <TableHead className="text-right min-w-[200px]">
-                    اجراءات
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data
-                  .filter((event: EventProps) => event.type === "old")
-                  .map((event: EventProps) => (
-                    <TableRow key={event._id}>
-                      <TableCell className="text-right min-w-[200px]">
-                        {event.titleAR}
-                      </TableCell>
-                      <TableCell className="text-right min-w-[400px]">
-                        {event.descriptionAR}
-                      </TableCell>
-                      <TableCell className="text-right min-w-[200px]">
-                        {event.date}
-                      </TableCell>
-                      <TableCell className="text-right min-w-[200px]">
-                        {event.image ? (
-                          <div>
-                            <Image
-                              src={event.image}
-                              width={80}
-                              height={80}
-                              alt="img"
-                              className="w-20"
-                            />
-                          </div>
-                        ) : (
-                          "لا يوجد صورة"
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right min-w-[200px]">
-                        <button
-                          onClick={() => handleDelete(event._id)}
-                          className="m-4 rounded-full p-4 bg-main text-white"
-                        >
-                          <FaTrash />
-                        </button>
-                        <Link href={`/edit/event/${event._id}`}>
-                          <button className="m-4 rounded-full p-4 bg-main text-white">
-                            <FaPen />
-                          </button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="text-center text-4xl">لا يوجد بيانات لعرضها</div>
-          )}
+              ))}
+            </TableBody>
+          </Table>
         </>
       ) : (
         <div className="text-center text-4xl">لا يوجد بيانات لعرضها</div>

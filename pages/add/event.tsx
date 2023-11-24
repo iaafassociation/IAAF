@@ -10,21 +10,14 @@ import { useSWRConfig } from "swr";
 
 // Module Imports
 import { uploadCloudinary } from "@/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { DatePicker } from "@/components/DatePicker";
 
 interface ValuesProps {
   titleAR: string;
   titleEN: string;
   descriptionAR: string;
   descriptionEN: string;
-  date: string;
-  type: string;
+  date: Date | undefined;
 }
 
 const initialValues: ValuesProps = {
@@ -32,8 +25,7 @@ const initialValues: ValuesProps = {
   titleEN: "",
   descriptionAR: "",
   descriptionEN: "",
-  date: "",
-  type: "",
+  date: undefined,
 };
 
 export default function AddEvent() {
@@ -50,7 +42,6 @@ export default function AddEvent() {
     titleEN: Yup.string().required("العنوان مطلوب"),
     descriptionAR: Yup.string().required("الوصف مطلوب"),
     descriptionEN: Yup.string().required("الوصف مطلوب"),
-    type: Yup.string().required("النوع مطلوب"),
     date: Yup.string().required("التاريخ مطلوب"),
   });
 
@@ -66,12 +57,13 @@ export default function AddEvent() {
         },
         body: JSON.stringify({
           ...values,
+          // date: new Date(String(values.date)).getTime(),
           image: link,
         }),
       });
       const data = await res.json();
       if (res.ok) {
-        toast.success("تم اضافة الحدث بنجاح");
+        toast.success("تم اضافة الخبر بنجاح");
         mutate("/api/event");
         router.push("/news");
       }
@@ -93,7 +85,7 @@ export default function AddEvent() {
   return (
     <section className="bg-[#E2E3E3] min-h-[calc(100vh-82px)] max-md:pt-16 max-md:pb-10 pt-28 pb-14 flex flex-col items-center">
       <h1 className="text-3xl font-black max-md:text-base mb-14 max-md:mb-6">
-        اضافة حدث
+        اضافة خبر
       </h1>
       <Formik
         initialValues={initialValues}
@@ -169,60 +161,20 @@ export default function AddEvent() {
               )}
             />
           </div>
-          <div className="flex justify-between my-2">
-            <div className="flex flex-col justify-start">
-              <Field type="text" name="type">
-                {({ field, form }: FieldProps) => (
-                  <Select
-                    defaultValue={field.value}
-                    onValueChange={(st) => {
-                      form.values.type = st;
-                      form.validateForm();
-                    }}
-                  >
-                    <SelectTrigger
-                      dir="rtl"
-                      onBlur={field.onBlur}
-                      className="outline-none max-md:h-[16px] max-md:p-1  focus:shadow-none w-[205px] max-md:w-[100px] max-md:text-[6px]/3 text-[#A3AAC2] text-lg border border-[#E0E3EB] bg-white rounded-sm p-1.5"
-                    >
-                      <SelectValue placeholder="اختر نوع الحدث" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem className="cursor-pointer" value="new">
-                        اخر الاحداث
-                      </SelectItem>
-                      <SelectItem className="cursor-pointer" value="old">
-                        احداث سابقة
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              </Field>
-              <ErrorMessage
-                name="type"
-                render={(msg) => (
-                  <p className="text-red-700 w-1/2 text-xs max-md:text-[6px]/3">
-                    {msg}
-                  </p>
-                )}
-              />
-            </div>
-            <div>
-              <Field
-                type="text"
-                name="date"
-                placeholder="تاريخ الحدث"
-                className="outline-none max-md:h-[16px] w-[205px] max-md:p-1  max-md:w-[100px] max-md:text-[8px] text-lg border border-[#E0E3EB] bg-white rounded-sm p-1.5 placeholder:text-[#A3AAC2]"
-              />
-              <ErrorMessage
-                name="date"
-                render={(msg) => (
-                  <p className="text-red-700 w-1/2 text-xs max-md:text-[6px]/3">
-                    {msg}
-                  </p>
-                )}
-              />
-            </div>
+          <div className="flex flex-col my-2">
+            <Field type="text" name="date">
+              {({ field, form, meta }: FieldProps) => (
+                <DatePicker field={field} form={form} meta={meta} />
+              )}
+            </Field>
+            <ErrorMessage
+              name="date"
+              render={(msg) => (
+                <p className="text-red-700 w-1/2 text-xs max-md:text-[6px]/3">
+                  {msg}
+                </p>
+              )}
+            />
           </div>
           {image ? (
             <div className="flex justify-between flex-wrap">

@@ -7,7 +7,6 @@ const eventSchema = new Schema({
   descriptionEN: String,
   date: String,
   image: String,
-  type: String,
   createdAt: {
     type: Date,
     default: () => Date.now(),
