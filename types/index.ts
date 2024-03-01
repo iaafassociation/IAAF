@@ -56,3 +56,10 @@ export interface MessageProps {
   message: string;
   createdAt: string;
 }
+
+export interface UserProps {
+  _id: string;
+  username: string;
+  password: string;
+  role: string;
+}

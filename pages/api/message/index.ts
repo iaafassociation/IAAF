@@ -38,7 +38,9 @@ export default async function handler(
   await runMiddleware(req, res, cors);
   if (req.method === "GET") {
     try {
-      connectMongo().catch(() => res.json({ message: "Connection failed" }));
+      await connectMongo().catch(() =>
+        res.json({ message: "Connection failed" })
+      );
       const messages = await Message.find();
       res.status(200).json(messages);
     } catch (error) {
@@ -47,7 +49,9 @@ export default async function handler(
   }
   if (req.method === "POST") {
     try {
-      connectMongo().catch(() => res.json({ message: "Connection failed" }));
+      await connectMongo().catch(() =>
+        res.json({ message: "Connection failed" })
+      );
       await Message.create(req.body);
       res.status(200).json({ message: "Message added successfully" });
     } catch (error) {

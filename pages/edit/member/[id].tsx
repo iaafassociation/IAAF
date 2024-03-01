@@ -74,6 +74,8 @@ export default function EditMember() {
         mutate("/api/members");
         mutate("/api/members/" + router.query.id);
         router.push("/members");
+      } else {
+        toast.error("حدث خطأ ما");
       }
       console.log(final);
     } catch (error) {

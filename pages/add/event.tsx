@@ -66,8 +66,9 @@ export default function AddEvent() {
         toast.success("تم اضافة الخبر بنجاح");
         mutate("/api/event");
         router.push("/news");
+      } else {
+        toast.error("حدث خطأ ما");
       }
-      console.log(data);
     } catch (error) {
       console.log(error);
     } finally {

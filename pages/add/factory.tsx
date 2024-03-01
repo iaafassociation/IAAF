@@ -84,8 +84,9 @@ export default function AddFactory() {
         toast.success("تم اضافة المشروع بنجاح");
         mutate("/api/factory");
         router.push("/");
+      } else {
+        toast.error("حدث خطأ ما");
       }
-      console.log(data);
     } catch (error) {
       console.log(error);
     } finally {

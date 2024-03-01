@@ -1,6 +1,5 @@
 // Imports
-import { HiBars3BottomRight } from "react-icons/hi2";
-import { FaChevronLeft } from "react-icons/fa6";
+import { signOut, useSession } from "next-auth/react";
 
 // Module Imports
 import Image from "next/image";
@@ -9,10 +8,13 @@ import { useRouter } from "next/router";
 
 export default function Navbar() {
   const router = useRouter();
+  const { status, data: session } = useSession();
 
   return (
     <header
-      className={`${"sticky bg-white border-b-2 border-black"} top-0 z-50  flex rtl:flex-row-reverse px-10 max-md:px-2 items-center justify-between`}
+      className={`${
+        status === "loading" && "hidden"
+      } sticky bg-white border-b-2 border-black top-0 z-50  flex rtl:flex-row-reverse px-10 max-md:px-2 items-center justify-between`}
     >
       <div className="flex rtl:flex-row-reverse items-center">
         <div className="mr-20 max-lg:mr-10 max-md:mr-4">
@@ -24,9 +26,22 @@ export default function Navbar() {
             className="h-20 max-lg:h-16 max-md:h-12"
           />
         </div>
+        {status === "authenticated" && <p>مرحبا {session?.user.username}</p>}
       </div>
       <nav>
         <ul className="flex flex-row-reverse max-md:hidden">
+          {session?.user.role === "admin" && (
+            <li className="mx-5 max-lg:mx-3 font-extrabold text-sm max-lg:text-xs">
+              <Link
+                href="/admin"
+                className={
+                  router.pathname === "/admin" ? "text-main" : "text-black"
+                }
+              >
+                المستخدمين
+              </Link>
+            </li>
+          )}
           <li className="mx-5 max-lg:mx-3 font-extrabold text-sm max-lg:text-xs">
             <Link
               href="/"
@@ -65,6 +80,26 @@ export default function Navbar() {
               الرسائل
             </Link>
           </li>
+          {status === "unauthenticated" && (
+            <li className="mx-5 max-lg:mx-3 font-extrabold text-sm max-lg:text-xs">
+              <Link
+                href="/sign-in"
+                className={
+                  router.pathname === "/sign-in" ? "text-main" : "text-black"
+                }
+              >
+                تسجيل الدخول
+              </Link>
+            </li>
+          )}
+          {status === "authenticated" && (
+            <li
+              className="mx-5 max-lg:mx-3 font-extrabold text-sm max-lg:text-xs cursor-pointer"
+              onClick={() => signOut()}
+            >
+              تسجيل الخروج
+            </li>
+          )}
         </ul>
       </nav>
     </header>

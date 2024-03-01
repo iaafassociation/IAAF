@@ -3,6 +3,9 @@ import Member from "@/models/Member";
 import { MemberProps } from "@/types";
 import Cors from "cors";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
+import User from "@/models/User";
 
 type Data = MemberProps[] | { message: string };
 
@@ -38,7 +41,9 @@ export default async function handler(
   if (req.method === "GET") {
     // console.log(req.query.search);
     await runMiddleware(req, res, cors);
-    connectMongo().catch(() => res.json({ message: "Connection failed" }));
+    await connectMongo().catch(() =>
+      res.json({ message: "Connection failed" })
+    );
     if (req.query.search) {
       try {
         const members = await Member.find({
@@ -64,8 +69,13 @@ export default async function handler(
   }
   if (req.method === "POST") {
     try {
+      const session = await getServerSession(req, res, authOptions);
+      const user = await User.findOne({ username: session?.user.username });
+      if (!user) return res.status(403).json({ message: "Unauthorized" });
       console.log(req.body);
-      connectMongo().catch(() => res.json({ message: "Connection failed" }));
+      await connectMongo().catch(() =>
+        res.json({ message: "Connection failed" })
+      );
       await Member.create(req.body);
       res.status(200).json({ message: "Member added successfully" });
     } catch (error) {

@@ -69,8 +69,9 @@ export default function AddMember() {
           toast.success("تم اضافة العضو بنجاح");
           mutate("/api/members");
           router.push("/members");
+        } else {
+          toast.error("حدث خطأ ما");
         }
-        console.log(data);
       } catch (error) {
         console.log(error);
       } finally {

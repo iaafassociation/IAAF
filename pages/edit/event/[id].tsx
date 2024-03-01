@@ -79,8 +79,9 @@ export default function EditMember() {
         mutate("/api/event");
         mutate("/api/event/" + router.query.id);
         router.push("/news");
+      } else {
+        toast.error("حدث خطأ ما");
       }
-      console.log(final);
     } catch (error) {
       console.log(error);
     } finally {

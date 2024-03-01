@@ -33,8 +33,6 @@ export default function EditFactory() {
     isLoading,
   } = useSWR(`/api/factory/${router.query.id}`, fetcher);
 
-  console.log(data);
-
   const initialValues: ValuesProps = {
     nameAR: data?.nameAR as string | "",
     nameEN: data?.nameEN as string | "",
@@ -54,7 +52,6 @@ export default function EditFactory() {
   const [loading, setLoading] = useState(false);
   const [deleted, setDeleted] = useState(false);
 
-  console.log(urls);
   // validation schema using yup
   const validationSchema = Yup.object({
     nameAR: Yup.string().required("الاسم مطلوب"),
@@ -84,8 +81,8 @@ export default function EditFactory() {
           ? [].concat(...data.images, ...arr)
           : [].concat(...(oldImages as any), ...arr);
 
-        const res = await fetch("/api/factory", {
-          method: "POST",
+        const res = await fetch(`/api/factory/${router.query.id}`, {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
@@ -98,6 +95,8 @@ export default function EditFactory() {
         if (res.ok) {
           toast.success("تم تعديل المشروع بنجاح");
           router.push("/");
+        } else {
+          toast.error("حدث خطأ ما");
         }
         console.log(dataRes);
       } catch (error) {

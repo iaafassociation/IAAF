@@ -3,6 +3,9 @@ import Factory from "@/models/Factory";
 import { FactoryProps } from "@/types";
 import Cors from "cors";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
+import User from "@/models/User";
 
 type Data = FactoryProps[] | { message: string };
 
@@ -38,7 +41,9 @@ export default async function handler(
   if (req.method === "GET") {
     const { search, limit, page } = req.query;
     await runMiddleware(req, res, cors);
-    connectMongo().catch(() => res.json({ message: "Connection failed" }));
+    await connectMongo().catch(() =>
+      res.json({ message: "Connection failed" })
+    );
     if (search) {
       try {
         // console.log(search);
@@ -76,6 +81,12 @@ export default async function handler(
   }
   if (req.method === "POST") {
     try {
+      const session = await getServerSession(req, res, authOptions);
+      const user = await User.findOne({ username: session?.user.username });
+      if (!user) return res.status(403).json({ message: "Unauthorized" });
+      await connectMongo().catch(() =>
+        res.json({ message: "Connection failed" })
+      );
       await Factory.create(req.body);
       res.status(200).json({ message: "Project added successfully" });
     } catch (error) {
