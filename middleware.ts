@@ -34,5 +34,7 @@ export const config = {
     "/messages",
     "/add/:path*",
     "/edit/:path*",
+    "/((?!.+\\.[\\w]+$|_next).*)",
+    "/(api|trpc)(.*)",
   ],
 };
