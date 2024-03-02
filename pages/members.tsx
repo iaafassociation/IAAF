@@ -14,8 +14,13 @@ import { FaSearch } from "react-icons/fa";
 import { FaPen, FaTrash, FaXmark } from "react-icons/fa6";
 import useSWR from "swr";
 import Swal from "sweetalert2";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-export default function Members() {
+export default function Members({
+  session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [search, setSearch] = useState("");
   const [text, setText] = useState("");
 
@@ -320,154 +325,25 @@ export default function Members() {
       ) : (
         <div className="text-center text-4xl">لا يوجد بيانات لعرضها</div>
       )}
-      {/* {isLoading ? (
-        <div className="text-center text-4xl">جاري تحميل البيانات...</div>
-      ) : error ? (
-        <div className="text-center text-4xl">
-          حدث خطأ يرجى المحاولة مرة اخرى
-        </div>
-      ) : data.length > 0 ? (
-        <>
-          <div className="text-center text-4xl text-sec my-10 font-black">
-            الإدارة
-          </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-right min-w-[200px]">
-                  اسم العضو
-                </TableHead>
-                <TableHead className="text-right min-w-[200px]">
-                  صورة العضو
-                </TableHead>
-                <TableHead className="text-right min-w-[200px]">
-                  الرتبة
-                </TableHead>
-                <TableHead className="text-right min-w-[200px]">
-                  اجراءات
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data
-                .filter((member: MemberProps) => member.role !== "member")
-                .map((member: MemberProps) => (
-                  <TableRow key={member._id}>
-                    <TableCell className="text-right min-w-[200px]">
-                      {member.nameAR}
-                    </TableCell>
-
-                    <TableCell className="text-right min-w-[200px]">
-                      <div>
-                        <Image
-                          src={member.image}
-                          width={80}
-                          height={80}
-                          alt="img"
-                          className="w-20"
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right min-w-[200px]">
-                      {member.role === "chairman"
-                        ? "رئيس مجلس الادارة"
-                        : member.role === "vice"
-                        ? "نائب رئيس مجلس الادارة"
-                        : member.role === "secretary"
-                        ? "الأمين العام"
-                        : member.role === "treasurer"
-                        ? "أمين الصندوق"
-                        : "عضو مجلس إدارة"}
-                    </TableCell>
-                    <TableCell className="text-right min-w-[200px]">
-                      <button
-                        onClick={() => handleDelete(member._id)}
-                        className="m-4 rounded-full p-4 bg-main text-white"
-                      >
-                        <FaTrash />
-                      </button>
-                      <Link href={`/edit/member/${member._id}`}>
-                        <button className="m-4 rounded-full p-4 bg-main text-white">
-                          <FaPen />
-                        </button>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-          <div className="text-center text-4xl text-sec my-10 font-black">
-            اعضاء مجلس الإدارة
-          </div>
-          <Table className="mt-10">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-right min-w-[200px]">
-                  اسم العضو
-                </TableHead>
-                <TableHead className="text-right min-w-[200px]">
-                  صورة العضو
-                </TableHead>
-                <TableHead className="text-right min-w-[200px]">
-                  الرتبة
-                </TableHead>
-                <TableHead className="text-right min-w-[200px]">
-                  اجراءات
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data
-                .filter((member: MemberProps) => member.role === "member")
-                .map((member: MemberProps) => (
-                  <TableRow key={member._id}>
-                    <TableCell className="text-right min-w-[200px]">
-                      {member.nameAR}
-                    </TableCell>
-
-                    <TableCell className="text-right min-w-[200px]">
-                      <div>
-                        <Image
-                          src={member.image}
-                          width={80}
-                          height={80}
-                          alt="img"
-                          className="w-20"
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right min-w-[200px]">
-                      {member.role === "chairman"
-                        ? "رئيس مجلس الادارة"
-                        : member.role === "vice"
-                        ? "نائب رئيس مجلس الادارة"
-                        : member.role === "secretary"
-                        ? "الأمين العام"
-                        : member.role === "treasurer"
-                        ? "أمين الصندوق"
-                        : "عضو مجلس إدارة"}
-                    </TableCell>
-                    <TableCell className="text-right min-w-[200px]">
-                      <button
-                        onClick={() => handleDelete(member._id)}
-                        className="m-4 rounded-full p-4 bg-main text-white"
-                      >
-                        <FaTrash />
-                      </button>
-                      <Link href={`/edit/member/${member._id}`}>
-                        <button className="m-4 rounded-full p-4 bg-main text-white">
-                          <FaPen />
-                        </button>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </>
-      ) : (
-        <div className="text-center text-4xl">لا يوجد بيانات لعرضها</div>
-      )} */}
     </section>
   );
 }
+
+export const getServerSideProps = (async ({ req, res }) => {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}) satisfies GetServerSideProps;

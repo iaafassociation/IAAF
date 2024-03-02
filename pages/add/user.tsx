@@ -126,7 +126,7 @@ export default function AddUser({
 export const getServerSideProps = (async ({ req, res }) => {
   const session = await getServerSession(req, res, authOptions);
 
-  if (session?.user.role !== "admin" || !session) {
+  if (!session || session.user.role !== "admin") {
     return {
       redirect: {
         destination: "/",

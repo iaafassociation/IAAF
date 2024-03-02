@@ -13,6 +13,9 @@ import { useSWRConfig } from "swr";
 // Module Imports
 import { uploadCloudinary } from "@/lib/utils";
 import { DatePicker } from "@/components/DatePicker";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 interface ValuesProps {
   titleAR: string;
@@ -22,7 +25,9 @@ interface ValuesProps {
   date: Date | undefined;
 }
 
-export default function EditMember() {
+export default function EditMember({
+  session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -278,3 +283,22 @@ export default function EditMember() {
     </section>
   );
 }
+
+export const getServerSideProps = (async ({ req, res }) => {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}) satisfies GetServerSideProps;

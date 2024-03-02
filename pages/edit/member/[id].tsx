@@ -18,6 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 interface ValuesProps {
   nameAR: string;
@@ -25,7 +28,9 @@ interface ValuesProps {
   role: string;
 }
 
-export default function EditMember() {
+export default function EditMember({
+  session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -256,3 +261,22 @@ export default function EditMember() {
     </section>
   );
 }
+
+export const getServerSideProps = (async ({ req, res }) => {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}) satisfies GetServerSideProps;

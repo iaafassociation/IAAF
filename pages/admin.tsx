@@ -14,8 +14,13 @@ import { FaSearch } from "react-icons/fa";
 import { FaPen, FaTrash, FaXmark } from "react-icons/fa6";
 import useSWR from "swr";
 import Swal from "sweetalert2";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]";
 
-export default function Admin() {
+export default function Admin({
+  session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [search, setSearch] = useState("");
   const [text, setText] = useState("");
 
@@ -194,3 +199,22 @@ export default function Admin() {
     </section>
   );
 }
+
+export const getServerSideProps = (async ({ req, res }) => {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session || session.user.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}) satisfies GetServerSideProps;

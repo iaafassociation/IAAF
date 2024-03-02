@@ -17,6 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 interface ValuesProps {
   nameAR: string;
@@ -30,7 +33,9 @@ const initialValues: ValuesProps = {
   role: "",
 };
 
-export default function AddMember() {
+export default function AddMember({
+  session,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -244,3 +249,22 @@ export default function AddMember() {
     </section>
   );
 }
+
+export const getServerSideProps = (async ({ req, res }) => {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+}) satisfies GetServerSideProps;
