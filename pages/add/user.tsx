@@ -121,17 +121,17 @@ export default function AddUser() {
   );
 }
 
-export const getServerSideProps = (async ({ req, res }) => {
-  const session = await getServerSession(req, res, authOptions);
+// export const getServerSideProps = (async ({ req, res }) => {
+//   const session = await getServerSession(req, res, authOptions);
 
-  if (!session || session.user.role !== "admin") {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+//   if (!session || session.user.role !== "admin") {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return { props: {} };
-}) satisfies GetServerSideProps;
+//   return { props: {} };
+// }) satisfies GetServerSideProps;

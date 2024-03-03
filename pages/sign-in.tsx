@@ -120,17 +120,17 @@ export default function SignIn() {
   );
 }
 
-export const getServerSideProps = (async ({ req, res }) => {
-  const session = await getServerSession(req, res, authOptions);
+// export const getServerSideProps = (async ({ req, res }) => {
+//   const session = await getServerSession(req, res, authOptions);
 
-  if (session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+//   if (session) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return { props: {} };
-}) satisfies GetServerSideProps;
+//   return { props: {} };
+// }) satisfies GetServerSideProps;

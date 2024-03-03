@@ -268,17 +268,17 @@ export default function News() {
   );
 }
 
-export const getServerSideProps = (async ({ req, res }) => {
-  const session = await getServerSession(req, res, authOptions);
+// export const getServerSideProps = (async ({ req, res }) => {
+//   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: "/sign-in",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return { props: {} };
-}) satisfies GetServerSideProps;
+//   return { props: {} };
+// }) satisfies GetServerSideProps;
