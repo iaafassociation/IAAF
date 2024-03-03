@@ -14,9 +14,6 @@ import { FaSearch } from "react-icons/fa";
 import { FaPen, FaTrash, FaXmark } from "react-icons/fa6";
 import useSWR from "swr";
 import Swal from "sweetalert2";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 export default function Members() {
   const [search, setSearch] = useState("");
@@ -326,18 +323,3 @@ export default function Members() {
     </section>
   );
 }
-
-// export const getServerSideProps = (async ({ req, res }) => {
-//   const session = await getServerSession(req, res, authOptions);
-
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/sign-in",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return { props: {} };
-// }) satisfies GetServerSideProps;

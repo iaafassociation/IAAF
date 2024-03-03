@@ -1,12 +1,9 @@
 // Imports
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
 
 interface ValuesProps {
   username: string;
@@ -120,18 +117,3 @@ export default function AddUser() {
     </section>
   );
 }
-
-// export const getServerSideProps = (async ({ req, res }) => {
-//   const session = await getServerSession(req, res, authOptions);
-
-//   if (!session || session.user.role !== "admin") {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return { props: {} };
-// }) satisfies GetServerSideProps;

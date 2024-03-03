@@ -11,9 +11,6 @@ import { useSWRConfig } from "swr";
 
 // Module Imports
 import { uploadCloudinary } from "@/lib/utils";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
 
 interface ValuesProps {
   nameAR: string;
@@ -333,18 +330,3 @@ export default function AddFactory() {
     </section>
   );
 }
-
-// export const getServerSideProps = (async ({ req, res }) => {
-//   const session = await getServerSession(req, res, authOptions);
-
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/sign-in",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return { props: {} };
-// }) satisfies GetServerSideProps;

@@ -1,12 +1,9 @@
 // Imports
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
 import { signIn } from "next-auth/react";
 
 interface ValuesProps {
@@ -45,7 +42,7 @@ export default function SignIn() {
       });
 
       if (status?.ok) {
-        router.push("/");
+        router.push((router.query.callbackUrl as string) || "/");
         toast.success("تم تسجيل الدخول بنجاح");
       } else {
         if (status?.error === "password") {
@@ -119,18 +116,3 @@ export default function SignIn() {
     </section>
   );
 }
-
-// export const getServerSideProps = (async ({ req, res }) => {
-//   const session = await getServerSession(req, res, authOptions);
-
-//   if (session) {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return { props: {} };
-// }) satisfies GetServerSideProps;
