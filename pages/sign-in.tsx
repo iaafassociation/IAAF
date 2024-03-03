@@ -1,10 +1,10 @@
 // Imports
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 
 interface ValuesProps {
   username: string;
@@ -20,6 +20,16 @@ export default function SignIn() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const securePage = async () => {
+      const session = await getSession();
+      if (session) {
+        router.push((router.query.callbackUrl as string) || "/");
+      }
+    };
+    securePage();
+  }, [router]);
 
   // validation schema using yup
   const validationSchema = Yup.object({
@@ -43,6 +53,7 @@ export default function SignIn() {
 
       if (status?.ok) {
         router.push((router.query.callbackUrl as string) || "/");
+        location.reload();
         toast.success("تم تسجيل الدخول بنجاح");
       } else {
         if (status?.error === "password") {
