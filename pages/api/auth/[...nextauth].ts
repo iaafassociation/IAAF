@@ -1,9 +1,11 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
 import connectMongo from "@/database/connection";
 import User from "@/models/User";
+import clientPromise from "@/database/client";
 
 export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -40,6 +42,8 @@ export const authOptions: AuthOptions = {
   jwt: {
     maxAge: 60 * 60,
   },
+  //@ts-ignore
+  adapter: MongoDBAdapter(clientPromise),
   callbacks: {
     async jwt({ token, user }) {
       if (user) {

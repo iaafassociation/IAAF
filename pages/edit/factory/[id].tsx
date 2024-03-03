@@ -26,9 +26,7 @@ interface ValuesProps {
   email: string;
 }
 
-export default function EditFactory({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function EditFactory() {
   const router = useRouter();
 
   const fetcher = (key: string) => fetch(key).then((res) => res.json());
@@ -400,9 +398,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;

@@ -18,9 +18,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 
-export default function Admin({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Admin() {
   const [search, setSearch] = useState("");
   const [text, setText] = useState("");
 
@@ -212,9 +210,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;

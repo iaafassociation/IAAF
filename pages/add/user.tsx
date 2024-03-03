@@ -18,9 +18,7 @@ const initialValues: ValuesProps = {
   password: "",
 };
 
-export default function AddUser({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function AddUser() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -135,9 +133,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;

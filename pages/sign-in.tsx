@@ -19,9 +19,7 @@ const initialValues: ValuesProps = {
   password: "",
 };
 
-export default function SignIn({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function SignIn() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -134,9 +132,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;

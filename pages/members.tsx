@@ -18,9 +18,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-export default function Members({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Members() {
   const [search, setSearch] = useState("");
   const [text, setText] = useState("");
 
@@ -341,9 +339,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;

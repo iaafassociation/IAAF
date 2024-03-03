@@ -33,9 +33,7 @@ const initialValues: ValuesProps = {
   role: "",
 };
 
-export default function AddMember({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function AddMember() {
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -262,9 +260,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;

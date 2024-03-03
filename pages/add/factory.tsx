@@ -37,9 +37,7 @@ const initialValues: ValuesProps = {
   phone: "",
 };
 
-export default function AddFactory({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function AddFactory() {
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -348,9 +346,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;

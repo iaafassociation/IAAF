@@ -25,9 +25,7 @@ interface ValuesProps {
   date: Date | undefined;
 }
 
-export default function EditMember({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function EditMember() {
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -296,9 +294,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/mongodb-adapter": "^2.5.0",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
@@ -23,9 +24,10 @@
     "formik": "^2.4.5",
     "lucide-react": "^0.291.0",
     "mailgen": "^2.0.28",
+    "mongodb": "^6.4.0",
     "mongoose": "^7.6.3",
     "next": "14.0.0",
-    "next-auth": "^4.24.6",
+    "next-auth": "^4.22.3",
     "nodemailer": "^6.9.7",
     "react": "^18",
     "react-day-picker": "^8.9.1",

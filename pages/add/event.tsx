@@ -31,9 +31,7 @@ const initialValues: ValuesProps = {
   date: undefined,
 };
 
-export default function AddEvent({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function AddEvent() {
   const router = useRouter();
   const { mutate } = useSWRConfig();
 
@@ -240,9 +238,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;

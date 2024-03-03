@@ -14,9 +14,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 
-export default function Messages({
-  session,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Messages() {
   const fetcher = (key: string) => fetch(key).then((res) => res.json());
   const {
     data: messageData,
@@ -247,9 +245,5 @@ export const getServerSideProps = (async ({ req, res }) => {
     };
   }
 
-  return {
-    props: {
-      session,
-    },
-  };
+  return { props: {} };
 }) satisfies GetServerSideProps;
