@@ -7,6 +7,7 @@ import { AiOutlineCloudUpload } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa6";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import { useSWRConfig } from "swr";
 import toast from "react-hot-toast";
 
 // Module Imports
@@ -25,6 +26,7 @@ interface ValuesProps {
 
 export default function EditFactory() {
   const router = useRouter();
+  const { mutate } = useSWRConfig();
 
   const fetcher = (key: string) => fetch(key).then((res) => res.json());
   const {
@@ -94,6 +96,8 @@ export default function EditFactory() {
         const dataRes = await res.json();
         if (res.ok) {
           toast.success("تم تعديل المشروع بنجاح");
+          mutate("/api/factory");
+          mutate("/api/factory/" + router.query.id);
           router.push("/");
         } else {
           toast.error("حدث خطأ ما");
