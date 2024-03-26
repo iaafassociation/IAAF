@@ -6,6 +6,9 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   async function middleware(req) {
+    // if (req.nextUrl.pathname.startsWith("/api")) {
+    //   return null;
+    // }
     if (
       (req.nextUrl.pathname === "/admin" ||
         req.nextUrl.pathname === "/add/user") &&
@@ -62,7 +65,5 @@ export const config = {
     "/messages",
     "/add/:path*",
     "/edit/:path*",
-    "/((?!.+\\.[\\w]+$|_next).*)",
-    "/(api|trpc)(.*)",
   ],
 };
