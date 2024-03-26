@@ -28,8 +28,8 @@ export default function App({
             <p className="mt-2">
               تم انشاءه بواسطة{" "}
               <span className="font-black text-sm max-md:text-xs text-[#9038d8]">
-                <a href="https://codeverse-team.vercel.app/" target="_blank">
-                  CodeVerse
+                <a href="https://devlab-tech.com" target="_blank">
+                  DevLab
                 </a>
               </span>
             </p>
