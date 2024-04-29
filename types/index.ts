@@ -63,3 +63,20 @@ export interface UserProps {
   password: string;
   role: string;
 }
+
+export interface WorkProps {
+  _id: string;
+  name: string;
+  bDate: string;
+  education: string;
+  job: string;
+  college: string;
+  university: string;
+  gradYear: string;
+  address: string;
+  military: string;
+  phone: string;
+  email: string;
+  experience: string;
+  createdAt: string;
+}

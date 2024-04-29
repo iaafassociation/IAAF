@@ -80,6 +80,16 @@ export default function Navbar() {
               الرسائل
             </Link>
           </li>
+          <li className="mx-5 max-lg:mx-3 font-extrabold text-sm max-lg:text-xs">
+            <Link
+              href="/works"
+              className={
+                router.pathname === "/works" ? "text-main" : "text-black"
+              }
+            >
+              طلبات التوظيف
+            </Link>
+          </li>
           {status === "unauthenticated" && (
             <li className="mx-5 max-lg:mx-3 font-extrabold text-sm max-lg:text-xs">
               <Link
