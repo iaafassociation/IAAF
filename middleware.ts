@@ -63,6 +63,7 @@ export const config = {
     "/members",
     "/news",
     "/messages",
+    "/works",
     "/add/:path*",
     "/edit/:path*",
   ],
